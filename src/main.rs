@@ -74,7 +74,7 @@ async fn main() -> Result<()> {
                     let relate_item: Vec<Element> = body.find_all(Locator::Css(".relate-item")).await?;
                     for i in relate_item.iter() {
                         let text: String = i.find(Locator::Css(".text")).await?.text().await?;
-                        if words.iter().any(|x: &Word| x.word != text) && words.len() < MAX_LEN {
+                        if words.iter().all(|x: &Word| x.word != text) && words.len() < MAX_LEN {
                             words.push(Word::new(&text));
                         }
                     }
