@@ -36,7 +36,7 @@ impl Word {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    const MAX_LEN: usize = 5000;
+    const MAX_LEN: usize = 20000;
     let client: Client = Client::new("http://localhost:9515").await?;
     let mut words: Vec<Word> = vec![Word::new("卷甲衔枚")];
     loop {

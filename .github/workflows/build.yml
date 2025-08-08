@@ -34,6 +34,12 @@ jobs:
 
     - name: Run
       run: |
+        Start-Process -FilePath "chromedriver.exe" -ArgumentList "--port=9515" -NoNewWindow -RedirectStandardOutput "chromedriver.log" -PassThru | Select-Object -ExpandProperty Id | Out-File -FilePath "chromedriver.pid"
+        $count = 0
+        while (!(Test-NetConnection -ComputerName localhost -Port 9515).TcpTestSucceeded -and $count -lt 30) {
+          Start-Sleep -Seconds 1
+          $count++
+        }
         cargo run
 
     - name: Cleanup processes
