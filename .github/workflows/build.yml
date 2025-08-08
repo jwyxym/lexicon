@@ -1,0 +1,51 @@
+name: Make
+
+on:
+  push:
+    branches: [ main ]
+    
+jobs:
+  test:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        override: true
+    
+    - name: Install Chrome and ChromeDriver
+      run: |
+        # 下载 Chrome for Testing
+        Invoke-WebRequest -Uri "https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.168/win64/chrome-win64.zip" -OutFile "chrome-win64.zip"
+        Expand-Archive -Path "chrome-win64.zip" -DestinationPath .
+        $chromePath = "$pwd\chrome-win64\chrome.exe"
+        echo "$pwd\chrome-win64" | Out-File -FilePath $env:GITHUB_PATH -Append
+        
+        Invoke-WebRequest -Uri "https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.168/win64/chromedriver-win64.zip" -OutFile "chromedriver-win64.zip"
+        Expand-Archive -Path "chromedriver-win64.zip" -DestinationPath .
+        echo "$pwd\chromedriver-win64" | Out-File -FilePath $env:GITHUB_PATH -Append
+
+    - name: Run
+      run: |
+        cargo run
+
+    - name: Cleanup processes
+      if: always()
+      run: |
+        if (Test-Path "chromedriver.pid") {
+          $chromedriverpid = Get-Content "chromedriver.pid"
+          Stop-Process -Id $chromedriverpid -Force -ErrorAction SilentlyContinue
+        }
+
+    - name: Upload Json
+      uses: actions/upload-artifact@v4
+      with:
+        name: idiom.json
+        path: .\idiom.json
