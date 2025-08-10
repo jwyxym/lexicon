@@ -1,0 +1,31 @@
+name: Run
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Run
+    runs-on: windows-latest
+    permissions:
+      contents: write
+      
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      
+      - name: run
+        run: |
+          cargo run
+      
+      - name: Upload idiom.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: idiom.json
+          path: .\idiom.json
