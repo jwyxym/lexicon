@@ -11,7 +11,8 @@ use std::{
     io::{
         Write,
         LineWriter,
-    }
+    },
+    time::Duration
 };
 use serde::Serialize;
 use serde_json::{Value};
@@ -55,7 +56,7 @@ async fn main() -> Result<()> {
         .append(true)
         .open("idiom.json")?;
     let mut writer: LineWriter<File>= LineWriter::new(file);
-    for i in 40001..51000 {
+    for i in 1..20000 {
         println!("{}", i);
         let url: String = format!("https://www.hanyuciku.com/cy/{}", i);
         match reqwest::get(url).await {
@@ -114,9 +115,9 @@ async fn main() -> Result<()> {
                 }
             },
             Err(_) => {
-                continue;
             }
         };
+        std::thread::sleep(Duration::from_secs_f32(1.5))
     }
     return Ok(())
 }
