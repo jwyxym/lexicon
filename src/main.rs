@@ -117,7 +117,7 @@ async fn main() -> Result<()> {
             Err(_) => {
             }
         };
-        std::thread::sleep(Duration::from_secs_f32(1.5))
+        std::thread::sleep(Duration::from_secs_f32(0.5))
     }
     return Ok(())
 }
