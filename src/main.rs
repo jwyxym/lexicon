@@ -56,7 +56,7 @@ async fn main() -> Result<()> {
         .append(true)
         .open("idiom.json")?;
     let mut writer: LineWriter<File>= LineWriter::new(file);
-    for i in 29795..40000 {
+    for i in 38829..50000 {
         println!("{}", i);
         let url: String = format!("https://www.hanyuciku.com/cy/{}", i);
         match reqwest::get(url).await {
